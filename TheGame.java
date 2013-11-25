@@ -187,140 +187,140 @@ public class TheGame extends GameThread{
 		
 		for (int j = 0; j < mBallX.length; j++){
 			
-		if (mBallInPlay[j]){	
-			
-		//If the ball moves down on the screen perform potential paddle collision
-		if(mBallSpeedY[j] > 0) {
-			//Get actual distance (without square root - remember?) between the mBall and the ball being checked
-			distanceBetweenBallAndPaddle = (mPaddleX - mBallX[j]) * (mPaddleX - mBallX[j]) + (mCanvasHeight - mBallY[j]) *(mCanvasHeight - mBallY[j]);
-		
-			//Check if the actual distance is lower than the allowed => collision
-			if(mMinDistanceBetweenRedBallAndBigBall >= distanceBetweenBallAndPaddle) {
+			if (mBallInPlay[j]){	
 
-				//Get the present velocity (this should also be the velocity going away after the collision)
-				float velocityOfBall = (float) Math.sqrt(mBallSpeedX[j]*mBallSpeedX[j] + mBallSpeedY[j]*mBallSpeedY[j]);
+				//If the ball moves down on the screen perform potential paddle collision
+				if(mBallSpeedY[j] > 0) {
+					//Get actual distance (without square root - remember?) between the mBall and the ball being checked
+					distanceBetweenBallAndPaddle = (mPaddleX - mBallX[j]) * (mPaddleX - mBallX[j]) + (mCanvasHeight - mBallY[j]) *(mCanvasHeight - mBallY[j]);
 
-				mBallSpeedX[j] = mBallX[j] - mPaddleX;
-				mBallSpeedY[j] = mBallY[j] - mCanvasHeight;
+					//Check if the actual distance is lower than the allowed => collision
+					if(mMinDistanceBetweenRedBallAndBigBall >= distanceBetweenBallAndPaddle) {
 
-				float newVelocity = (float) Math.sqrt(mBallSpeedX[j]*mBallSpeedX[j] + mBallSpeedY[j]*mBallSpeedY[j]);
+						//Get the present velocity (this should also be the velocity going away after the collision)
+						float velocityOfBall = (float) Math.sqrt(mBallSpeedX[j]*mBallSpeedX[j] + mBallSpeedY[j]*mBallSpeedY[j]);
 
-				mBallSpeedX[j] = mBallSpeedX[j] * velocityOfBall / newVelocity;
-				mBallSpeedY[j] = mBallSpeedY[j] * velocityOfBall / newVelocity;
-				
-			}
-		}
+						mBallSpeedX[j] = mBallX[j] - mPaddleX;
+						mBallSpeedY[j] = mBallY[j] - mCanvasHeight;
+
+						float newVelocity = (float) Math.sqrt(mBallSpeedX[j]*mBallSpeedX[j] + mBallSpeedY[j]*mBallSpeedY[j]);
+
+						mBallSpeedX[j] = mBallSpeedX[j] * velocityOfBall / newVelocity;
+						mBallSpeedY[j] = mBallSpeedY[j] * velocityOfBall / newVelocity;
+
+					}
+				}
 	
 		
-		//Move the ball's X and Y using the speed (pixel/sec)
-		mBallX[j] = mBallX[j] + secondsElapsed * mBallSpeedX[j];
-		mBallY[j] = mBallY[j] + secondsElapsed * mBallSpeedY[j];
+				//Move the ball's X and Y using the speed (pixel/sec)
+				mBallX[j] = mBallX[j] + secondsElapsed * mBallSpeedX[j];
+				mBallY[j] = mBallY[j] + secondsElapsed * mBallSpeedY[j];
 
-		
-		//Check if the ball hits either the left side or the right side of the screen
-		//But only do something if the ball is moving towards that side of the screen
-		//If it does that => change the direction of the ball in the X direction
-		if((mBallX[j] <= mBall.getWidth() / 2 && mBallSpeedX[j] < 0) || (mBallX[j] >= mCanvasWidth - mBall.getWidth() / 2 && mBallSpeedX[j] > 0) ) {
-			mBallSpeedX[j] = -mBallSpeedX[j];
-		}
-		
-		//Loop for processing smiley faces	
-		for (int i = 0; i < mSmileyBallX.length; i++){
-			distanceBetweenBallAndPaddle = (mSmileyBallX[i] - mBallX[j]) * (mSmileyBallX[i] - mBallX[j]) + (mSmileyBallY[i] - mBallY[j]) *(mSmileyBallY[i] - mBallY[j]);
-		
-			//Check if the actual distance is lower than the allowed => collision
-			if(mMinDistanceBetweenRedBallAndBigBall >= distanceBetweenBallAndPaddle) {
 
-				//Get the present velocity (this should also be the velocity going away after the collision)
-				float velocityOfBall = (float) Math.sqrt(mBallSpeedX[j]*mBallSpeedX[j] + mBallSpeedY[j]*mBallSpeedY[j]);
-
-				//Change the direction of the ball
-				mBallSpeedX[j] = mBallX[j] - mSmileyBallX[i];
-				mBallSpeedY[j] = mBallY[j] - mSmileyBallY[i];
-
-				//Get the velocity after the collision
-				float newVelocity = (float) Math.sqrt(mBallSpeedX[j]*mBallSpeedX[j] + mBallSpeedY[j]*mBallSpeedY[j]);
-
-				//using the fraction between the original velocity and present velocity to calculate the needed
-				//speeds in X and Y to get the original velocity but with the new angle.
-				mBallSpeedX[j] = mBallSpeedX[j] * velocityOfBall / newVelocity;
-				mBallSpeedY[j] = mBallSpeedY[j] * velocityOfBall / newVelocity;
-			
-				//Increase score
-				updateScore(5);
-				
-				// move smiley face
-				mSmileyBallX[i] = randomGeneratorX.nextInt(mCanvasWidth - mSmileyBall.getHeight());
-				mSmileyBallY[i] = randomGeneratorY.nextInt(mCanvasHeight - mSmileyBall.getHeight());
-				
-				if (getScore()>=mBonusBall1){
-					mBallInPlay[1] = true;
+				//Check if the ball hits either the left side or the right side of the screen
+				//But only do something if the ball is moving towards that side of the screen
+				//If it does that => change the direction of the ball in the X direction
+				if((mBallX[j] <= mBall.getWidth() / 2 && mBallSpeedX[j] < 0) || (mBallX[j] >= mCanvasWidth - mBall.getWidth() / 2 && mBallSpeedX[j] > 0) ) {
+					mBallSpeedX[j] = -mBallSpeedX[j];
 				}
-				if (getScore()>=mBonusBall2){
-					mBallInPlay[2] = true;
+		
+				//Loop for processing smiley faces	
+				for (int i = 0; i < mSmileyBallX.length; i++){
+					distanceBetweenBallAndPaddle = (mSmileyBallX[i] - mBallX[j]) * (mSmileyBallX[i] - mBallX[j]) + (mSmileyBallY[i] - mBallY[j]) *(mSmileyBallY[i] - mBallY[j]);
+
+					//Check if the actual distance is lower than the allowed => collision
+					if(mMinDistanceBetweenRedBallAndBigBall >= distanceBetweenBallAndPaddle) {
+
+						//Get the present velocity (this should also be the velocity going away after the collision)
+						float velocityOfBall = (float) Math.sqrt(mBallSpeedX[j]*mBallSpeedX[j] + mBallSpeedY[j]*mBallSpeedY[j]);
+
+						//Change the direction of the ball
+						mBallSpeedX[j] = mBallX[j] - mSmileyBallX[i];
+						mBallSpeedY[j] = mBallY[j] - mSmileyBallY[i];
+
+						//Get the velocity after the collision
+						float newVelocity = (float) Math.sqrt(mBallSpeedX[j]*mBallSpeedX[j] + mBallSpeedY[j]*mBallSpeedY[j]);
+
+						//using the fraction between the original velocity and present velocity to calculate the needed
+						//speeds in X and Y to get the original velocity but with the new angle.
+						mBallSpeedX[j] = mBallSpeedX[j] * velocityOfBall / newVelocity;
+						mBallSpeedY[j] = mBallSpeedY[j] * velocityOfBall / newVelocity;
+
+						//Increase score
+						updateScore(5);
+
+						// move smiley face
+						mSmileyBallX[i] = randomGeneratorX.nextInt(mCanvasWidth - mSmileyBall.getHeight());
+						mSmileyBallY[i] = randomGeneratorY.nextInt(mCanvasHeight - mSmileyBall.getHeight());
+
+						if (getScore()>=mBonusBall1){
+							mBallInPlay[1] = true;
+						}
+						if (getScore()>=mBonusBall2){
+							mBallInPlay[2] = true;
+						}
+
+					}
+				} //end of smiley faces loop
+
+				//Loop for processing sad faces	
+				for (int i = 0; i < mSadBallX.length; i++){
+					distanceBetweenBallAndPaddle = (mSadBallX[i] - mBallX[j]) * (mSadBallX[i] - mBallX[j]) + (mSadBallY[i] - mBallY[j]) *(mSadBallY[i] - mBallY[j]);
+
+					//Check if the actual distance is lower than the allowed => collision
+					if(mMinDistanceBetweenRedBallAndBigBall >= distanceBetweenBallAndPaddle) {
+
+						//Get the present velocity (this should also be the velocity going away after the collision)
+						float velocityOfBall = (float) Math.sqrt(mBallSpeedX[j]*mBallSpeedX[j] + mBallSpeedY[j]*mBallSpeedY[j]);
+
+						//Change the direction of the ball
+						mBallSpeedX[j] = mBallX[j] - mSadBallX[i];
+						mBallSpeedY[j] = mBallY[j] - mSadBallY[i];
+
+						//Get the velocity after the collision
+						float newVelocity = (float) Math.sqrt(mBallSpeedX[j]*mBallSpeedX[j] + mBallSpeedY[j]*mBallSpeedY[j]);
+
+						//using the fraction between the original velocity and present velocity to calculate the needed
+						//speeds in X and Y to get the original velocity but with the new angle.
+						mBallSpeedX[j] = mBallSpeedX[j] * velocityOfBall / newVelocity;
+						mBallSpeedY[j] = mBallSpeedY[j] * velocityOfBall / newVelocity;
+
+						//Increase score
+						updateScore(-5);
+
+						//move sad face
+						mSadBallX[i] = randomGeneratorX.nextInt(mCanvasWidth - mSadBall.getHeight());
+						mSadBallY[i] = randomGeneratorY.nextInt(mCanvasHeight - mSadBall.getHeight());
+					}
+				} //end of sad faces loop		
+
+
+				//If the ball goes out of the top of the screen and moves towards the top of the screen =>
+				//change the direction of the ball in the Y direction
+				if(mBallY[j] <= mBall.getWidth() / 2 && mBallSpeedY[j] < 0) {
+					mBallSpeedY[j] = -mBallSpeedY[j];
 				}
 
-			}
-		} //end of smiley faces loop
-		
-		//Loop for processing sad faces	
-		for (int i = 0; i < mSadBallX.length; i++){
-			distanceBetweenBallAndPaddle = (mSadBallX[i] - mBallX[j]) * (mSadBallX[i] - mBallX[j]) + (mSadBallY[i] - mBallY[j]) *(mSadBallY[i] - mBallY[j]);
-		
-			//Check if the actual distance is lower than the allowed => collision
-			if(mMinDistanceBetweenRedBallAndBigBall >= distanceBetweenBallAndPaddle) {
+				//If the ball goes out of the bottom of the screen => lose the game if last ball lost
+				if(mBallY[j] >= mCanvasHeight) {
 
-				//Get the present velocity (this should also be the velocity going away after the collision)
-				float velocityOfBall = (float) Math.sqrt(mBallSpeedX[j]*mBallSpeedX[j] + mBallSpeedY[j]*mBallSpeedY[j]);
-
-				//Change the direction of the ball
-				mBallSpeedX[j] = mBallX[j] - mSadBallX[i];
-				mBallSpeedY[j] = mBallY[j] - mSadBallY[i];
-
-				//Get the velocity after the collision
-				float newVelocity = (float) Math.sqrt(mBallSpeedX[j]*mBallSpeedX[j] + mBallSpeedY[j]*mBallSpeedY[j]);
-
-				//using the fraction between the original velocity and present velocity to calculate the needed
-				//speeds in X and Y to get the original velocity but with the new angle.
-				mBallSpeedX[j] = mBallSpeedX[j] * velocityOfBall / newVelocity;
-				mBallSpeedY[j] = mBallSpeedY[j] * velocityOfBall / newVelocity;
-			
-				//Increase score
-				updateScore(-5);
-				
-				//move sad face
-				mSadBallX[i] = randomGeneratorX.nextInt(mCanvasWidth - mSadBall.getHeight());
-				mSadBallY[i] = randomGeneratorY.nextInt(mCanvasHeight - mSadBall.getHeight());
-			}
-		} //end of sad faces loop		
-			
-
-		//If the ball goes out of the top of the screen and moves towards the top of the screen =>
-		//change the direction of the ball in the Y direction
-		if(mBallY[j] <= mBall.getWidth() / 2 && mBallSpeedY[j] < 0) {
-			mBallSpeedY[j] = -mBallSpeedY[j];
-		}
-
-		//If the ball goes out of the bottom of the screen => lose the game if last ball lost
-		if(mBallY[j] >= mCanvasHeight) {
-			
-			mBallInPlay[j] = false;
-			mGameOver = true;
-			//Check to see if any ball in play and if so, keep game alive
-			for (int k = 0; k < mBallInPlay.length; k++){
-				if (mBallInPlay[k]){
-					mGameOver = false;
+					mBallInPlay[j] = false;
+					mGameOver = true;
+					//Check to see if any ball in play and if so, keep game alive
+					for (int k = 0; k < mBallInPlay.length; k++){
+						if (mBallInPlay[k]){
+							mGameOver = false;
+						}
+					}
+					if (mGameOver){
+						setState(GameThread.STATE_LOSE);
+					}
 				}
-			}
-			if (mGameOver){
-			setState(GameThread.STATE_LOSE);
-			}
-		}
-		
-		} // end of ball in play loop
-		
+
+			} // end of ball in play loop
+
 		} // end of ball loop
-	
+
 	} //end of method
 	
 } // end of class
